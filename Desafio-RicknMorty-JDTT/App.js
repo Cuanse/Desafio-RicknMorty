@@ -1,70 +1,25 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, Image, FlatList } from 'react-native';
-import { getCharacter } from './connection/conection';
-import { useState, useEffect } from 'react';
+import * as React from 'react';
+import Characters from './components/CharactersList';
+import CharacterItem from './components/CharacterItem';
+import {NavigationContainer} from '@react-navigation/native';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
+
+const Stack = createNativeStackNavigator();
+
+const MyStack = () => {
+  return (
+    <NavigationContainer>
+      <Stack.Navigator initialRouteName="CharactersPreview">
+        <Stack.Screen name="CharactersPreview" component={Characters}/>
+        <Stack.Screen name="CharacterItem" component={CharacterItem}/>
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
+};
 
 export default function App() {
-  const [characters, setCharacters] = useState(null);
-  
-  useEffect(() => {
-    const fetchData = async () => {
-      const result = await getCharacter();
-      setCharacters(result?.results || []); // API returns {results: [...]} for all characters
-      console.log('result recibidos:', result);
-    };
-    
-    fetchData();
-  }, []);
-
-  const renderItem = ({ item }) => (
-    <View style={styles.characterBox}>
-       <Image 
-      source={{ uri: item.image }}
-      style={styles.characterImage}
-      />
-      <Text>{item.name}</Text>
-      <Text>{item.status}</Text>
-      <Text>{item.species}</Text>
-      <Text>{item.gender}</Text>
-    </View>
-  );
-
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      {characters ? (
-        <FlatList
-          data={characters}
-          renderItem={renderItem}
-          keyExtractor={item => item.id.toString()}
-          numColumns={4}
-        />
-      ) : (
-        <Text>Loading...</Text>
-      )}
-      <StatusBar style="auto" />
-    </View>
+    MyStack()
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  characterBox: {
-    padding: 10,
-    margin: 5,
-    borderWidth: 1,
-    borderColor: '#ccc',
-    borderRadius: 5,
-  },
-  characterImage: {
-    width: 150,
-    height: 150,
-    borderRadius: 5,
-    marginBottom: 5,
-  },
-});
