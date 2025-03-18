@@ -1,14 +1,11 @@
-# initial proyect cmd
+# Rick and Morty App with React Native
+## By
+Juan David Tique Triana
+## initial proyect cmd
 npx create-expo-app@latest Desafio-RicknMorty-JDTT --template blank
-
-# initiate
-npx expo start
-
-# Dependencies
-npm install @react-navigation/native @react-navigation/native-stack
-npx expo install react-dom react-native-web @expo/metro-runtime react-native-screens react-native-screens react-native-safe-area-context
-
-### Coments:
+## Coments:
 - Inicié el proyecto como React en lugar de React-Native y deshice el repositorio y lo volví a hacer por esa confusión.
-- El API devuelve {info: {}, results: Array(20)} lo que facilitó la paginación.
-- LA dependencia @react-navigation/native primero se instala por npm y luego dependencias peer en npx
+- El API devuelve {info: {}, results: Array(20)} lo que facilitó la paginación. - https://rickandmortyapi.com/documentation
+- Se manda un query a la API para la paginación.
+- Evité hacer llamados dobles a la API al enviar los parametros a "CharacterItems" desde "CharactersList".
+- El API ya incluye un query para hacer filtrado por nombres y se implementó con el cambio de texto en el SearchBar.
