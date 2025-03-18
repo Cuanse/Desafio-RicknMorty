@@ -2,21 +2,23 @@ import { StyleSheet, Text, View, Image, FlatList, TouchableOpacity } from 'react
 import { getCharacter } from '../connection/Conection';
 import { useState, useEffect } from 'react';
 import { useNavigation } from '@react-navigation/native';
+import Pagination from './Pagination';
 
 export default function Characters() {
     const [characters, setCharacters] = useState(null);
     const [info, setInfo] = useState(null);
     const navigation = useNavigation();
+    const [currentPage, setCurrentPage] = useState(1);
 
     useEffect(() => {
-        const fetchData = async () => {
-            const result = await getCharacter();
+        const fetchData = async (page) => {
+            const result = await getCharacter(`?page=${page}`);
             setCharacters(result?.results || []);
             setInfo(result?.info || []);
         };
 
-        fetchData();
-    }, []);
+        fetchData(currentPage);
+    }, [currentPage]);
 
     const renderItem = ({ item }) => (
         <View style={styles.characterBox}>
@@ -28,13 +30,17 @@ export default function Characters() {
             <Text>{item.status}</Text>
             <Text>{item.species}</Text>
             <Text>{item.gender}</Text>
-            <TouchableOpacity 
-                style={styles.button} 
+            <TouchableOpacity
+                style={styles.button}
                 onPress={() => navigation.navigate('CharacterItem', { item })}>
                 <Text>More</Text>
             </TouchableOpacity>
         </View>
     );
+
+    const handlePageChange = (page) => {
+        setCurrentPage(page);
+    };
 
     return (
         <View style={styles.container}>
@@ -49,6 +55,14 @@ export default function Characters() {
             ) : (
                 <Text>Loading...</Text>
             )}
+            {info && (
+                        <Pagination 
+                            currentPage={currentPage}
+                            totalPages={info.pages}
+                            onPageChange={handlePageChange}
+                        />
+                    )}
+
         </View>
     );
 }
